@@ -21,7 +21,7 @@ Below are some suggested values for the initial setup. Feel free to change them 
 
 ```sh
 docker run \
- --name influx-measure \
+ --name influxdb2 \
  --publish 8086:8086 \
  --mount type=volume,source=influxdb2-data,target=/var/lib/influxdb2 \
  --mount type=volume,source=influxdb2-config,target=/etc/influxdb2 \
@@ -40,9 +40,15 @@ docker run \
 - Select all access token and name it appropriately
 - Copy the token and save it, you won't be able to see it again.
 
+While we are here we should set the retention policy of our bucket.
+
+- Selected Load Data on the left panel
+- Go to settings on the bucket
+- Set the `OLDER THAN` field to `forever`
+
 ## Configuring the HWPC sensor
 
-There are two configurations available in the [./configs](/configs/) folder. One for the Zen architecture and one for Intel. Select the one that matches your CPU.
+There are two configurations available in the [./configs/hwpc](/configs/hwpc) folder. One for the Zen architecture and one for Intel. Select the one that matches your CPU.
 
 ### Configuring the cgroup
 
@@ -101,13 +107,8 @@ docker run --rm  \
 powerapi/hwpc-sensor --config-file config_file.json
 ```
 
-docker run --rm  \
---net=host \
---privileged \
---pid=host \
--v /sys:/sys \
--v /var/lib/docker/containers:/var/lib/docker/containers:ro \
--v /tmp/powerapi-sensor-reporting:/reporting \
--v $(pwd):/srv \
--v $(pwd)/hwpc-config-zen4.json:/config_file.json \
-powerapi/hwpc-sensor --config-file config_file.json
+## Configuring SmartWatts
+
+The SmartWatts formula requires some configuration that is dependant on the hardware that it's running on.
+
+The configurations found under [./configs/smartwatts](./configs/smartwatts/) is configured for the devices on which our study was conducted.
