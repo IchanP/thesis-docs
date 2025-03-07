@@ -109,6 +109,19 @@ powerapi/hwpc-sensor --config-file config_file.json
 
 ## Configuring SmartWatts
 
-The SmartWatts formula requires some configuration that is dependant on the hardware that it's running on.
+The SmartWatts formula requires some configuration that is dependant on the hardware that it's running on. To find the `cpu-base-freq` field run `lscpu` and grab the value from the `CPU MHz` field.
+
+For the other fields or if `lscpu` does not display the field correctly, Google your CPU and find the specifications from there.
 
 The configurations found under [./configs/smartwatts](./configs/smartwatts/) is configured for the devices on which our study was conducted.
+
+Once the hardware specific fields are filled in run this command while replacing the `<name of config file>`.
+
+```sh
+docker run -t \
+--net=host \
+-v $(pwd)/<name of config file>.json:/config_file.json \
+powerapi/smartwatts-formula --config-file /config_file.json
+```
+
+## Grafana setup
