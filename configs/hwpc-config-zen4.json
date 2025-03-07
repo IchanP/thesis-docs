@@ -1,0 +1,36 @@
+{
+    "name": "sensor",
+    "verbose": true,
+    "frequency": 500,
+    "cgroup_basepath": "/sys/fs/cgroup/power.slice",
+    "output": {
+        "type": "mongodb",
+        "uri": "mongodb://127.0.0.1",
+        "database": "db_sensor",
+        "collection": "report_0"
+    },
+    "system": {
+        "rapl": {
+            "events": [
+                "RAPL_ENERGY_PKG"
+            ],
+            "monitoring_type": "MONITOR_ALL_CPU_PER_SOCKET"
+        },
+        "msr": {
+            "events": [
+                "TSC",
+                "APERF",
+                "MPERF"
+            ]
+        }
+    },
+    "container": {
+        "core": {
+            "events": [
+                "CYCLES_NOT_IN_HALT",
+                "RETIRED_INSTRUCTIONS",
+                "RETIRED_OPS"
+            ]
+        }
+    }
+}
