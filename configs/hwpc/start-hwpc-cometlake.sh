@@ -1,4 +1,5 @@
 docker run --rm  \
+--cap-add=SYS_ADMIN \
 --net=host \
 --privileged \
 --pid=host \

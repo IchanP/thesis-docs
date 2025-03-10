@@ -123,5 +123,43 @@ docker run -t \
 -v $(pwd)/<name of config file>.json:/config_file.json \
 powerapi/smartwatts-formula --config-file /config_file.json
 ```
+## Docker network set up
+
+Before setting up Grafana, we need to establish a docker network so the containers can communicate with each other.
+Stop your InfluxDB container using `docker stop` and instead
+Navigate to the `/docker` directory and run `docker compose up -d`
+This will run a new InfluxDB container as well as a Grafana instance on the same docker network.
 
 ## Grafana setup
+
+After the launch, Grafana will be available at http://localhost:3000.
+Username and Password is `admin`
+
+### Connect Grafana to InfluxDB
+
+Connections -> Data sources -> Add data source
+Select "InfluxDB". 
+
+Enter:
+
+- A data source Name, i.e `influxdb`,
+- A Query Language, select `FLUX`
+- An URL (http://influxdb:8086) **NOTE**: Grafana can now reach InfluxDB using the service name as the hostname within the docker network.
+- Organization, `graphql-experiment`
+- Token, your influxDB token.
+- Default Bucket, `graphql-power`
+
+Then click on the "Save & test" button.
+
+### Visualize the data 
+
+In Grafana:
+Dashboard -> Create dashboard -> Add visualisation -> your-influxDB-datasource
+
+Example: Query the power estimations from the last 10 minutes from the InfluxDB instance:
+```sql
+from(bucket: "graphql-power")
+  |> range(start: -10m) 
+  |> filter(fn: (r) => r["formula"] == "RAPL_ENERGY_PKG")
+```
+**NOTE**: If you ran new containers using docker compose, you may need to restart the sensor and formula for the data to be measured again correctly.

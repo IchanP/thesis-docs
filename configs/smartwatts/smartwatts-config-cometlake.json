@@ -17,7 +17,7 @@
             "port": 8086,
             "db": "graphql-power",
             "org": "graphql-experiment",
-            "token": "eZClwoy5mqiuPGvRMNEcXcrbiZlkKwlNVFcyYMRD1wjQpLCn6xhrNLdqCvdBUWdiGBSEK2oug2J5vMvQZSFeHw=="
+            "token": "0pFaQ-qh1-wxFvX42nhHQgy5f4Wec8ngP7LueMmeJ2sHswJqfK3k0fM7u3Kvc0bbz3lxOWxeqiozxJuiMc6gFQ=="
         }
     },
     "cpu-base-freq": 2700,
@@ -25,5 +25,5 @@
     "cpu-base-clock": 100,
     "cpu-error-threshold": 2.0,
     "disable-dram-formula": true,
-    "sensor-reports-frequency": 1000
+    "sensor-reports-frequency": 60000
 }
