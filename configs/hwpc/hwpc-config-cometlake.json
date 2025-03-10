@@ -27,8 +27,8 @@
     "container": {
         "core": {
             "events": [
-                "CPU_CLK_THREAD_UNHALTED:REF_P",
-                "CPU_CLK_THREAD_UNHALTED:THREAD_P",
+                "CPU_CLK_UNHALTED:REF_P",
+                "CPU_CLK_UNHALTED:THREAD_P",
                 "LLC_MISSES",
                 "INSTRUCTIONS_RETIRED"
             ]
