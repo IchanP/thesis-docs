@@ -2,6 +2,22 @@
 
 This is docs for helping to setup PowerAPI. It provides steps and links to follow for successful setup.
 
+There are several ways of getting everything up and running, either through the [run all script](./run-all.sh), starting [power-api](./configs/docker/powerapi/) through docker compose and then [cAdvisor](./configs/docker/cadvisor/) manually or simply starting all of the containers one by one.
+
+## Using the run-all.sh script with pre-configured values
+
+You can use the run-all.sh script to start all of the containers. The script starts the containers defined in [docker-compose.yaml](./configs//docker/docker-compose.yaml) file as well as [cAdvisor](./configs/docker/cadvisor/docker-compose-cometlake.yaml) and then starts the hwpc, smartwatts containers.
+
+To use the script you need to pass in a run flag like so:
+
+```sh
+./run-all.sh zen4
+```
+
+This tells the script to use the [start-sw-zen4.sh](./configs//smartwatts/start-sw-zen4.sh) and [start-hwpc-zen4.sh](./configs/hwpc/start-hwpc-zen4.sh) scripts. Passing cometlake results in the cometlake files being used.
+
+# Configuration and starting things manually
+
 ## Pulling Docker Images
 
 Start by pulling down Docker images
@@ -82,7 +98,7 @@ First we need to start MongoDB where all the data will be recorded:
 
 ## Starting MongoDB
 
-# TODO - Change this as we put it in docker-compose instead
+**NOTE MongoDB is included in the docker-compose files.**
 
 We need to setup a destination for the data to be recorded in. We use mongodb.
 
@@ -169,14 +185,8 @@ from(bucket: "graphql-power")
 
 **NOTE**: If you ran new containers using docker compose, you may need to restart the sensor and formula for the data to be measured again correctly.
 
-## Using the run-all.sh script with pre-configured values
+## cAdvisor setup
 
-You can use the run-all.sh script to start all of the containers. The script starts the containers defined in [docker-compose.yaml](./configs//docker/docker-compose.yaml) file and then starts the hwpc and smartwatts containers.
+The docker compose file in the `cadvisor` folder contains everything needed to run cAdvisor on your machine in a docker container. cAdvisor monitors the whole machine (all running containers) so you can through the web UI easily select the container on `http://localhost:8080/docker` want to inspect in real-time.
 
-To use the script you need to pass in a run flag like so:
-
-```sh
-./run-all.sh zen4
-```
-
-This tells the script to use the [start-sw-zen4.sh](./configs//smartwatts/start-sw-zen4.sh) and [start-hwpc-zen4.sh](./configs/hwpc/start-hwpc-zen4.sh) scripts. Passing cometlake results in the cometlake files being used.
+**NOTE**: cAdvisor's web ui is accessible on `http://localhost:8080/`

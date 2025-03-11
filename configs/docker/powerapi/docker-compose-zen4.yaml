@@ -1,0 +1,81 @@
+version: '3.8'
+
+services:
+  influxdb:
+    image: influxdb:2.7
+    restart: always
+    ports:
+      - 8086:8086
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=password
+      - DOCKER_INFLUXDB_INIT_ORG=graphql-experiment
+      - DOCKER_INFLUXDB_INIT_BUCKET=graphql-power
+    volumes:
+      - influxdb-data:/var/lib/influxdb2
+      - influxdb-config:/etc/influxdb2
+    networks:
+      - monitoring
+
+  grafana:
+    image: grafana/grafana
+    restart: always
+    depends_on:
+      - influxdb
+    ports:
+      - 3000:3000
+    volumes:
+      - grafana-data:/var/lib/grafana
+    networks:
+      - monitoring
+
+  mongo:
+    image: mongo
+    container_name: mongo_source
+    restart: always
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - monitoring
+
+  hwpc-sensor:
+    image: powerapi/hwpc-sensor
+    container_name: hwpc-sensor
+    restart: always
+    cap_add:
+      - SYS_ADMIN
+    privileged: true
+    pid: "host"
+    network_mode: "host"
+    volumes:
+      - /sys:/sys
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /tmp/powerapi-sensor-reporting:/reporting
+      - ../../hwpc/hwpc-config-zen4.json:/config_file.json
+      - ${PWD}:/srv
+    command: --config-file /config_file.json
+
+
+  smartwatts:
+    image: powerapi/smartwatts-formula
+    container_name: smartwatts
+    restart: always
+    network_mode: "host"
+    volumes:
+      - ../../smartwatts/smartwatts-config-zen4.json:/config_file.json
+    command: --config-file /config_file.json
+    depends_on:
+      - influxdb
+
+volumes:
+  influxdb-data: {}
+  influxdb-config: {}
+  grafana-data: {}
+  mongo-data: {}
+
+networks:
+  monitoring:
+    driver: bridge
