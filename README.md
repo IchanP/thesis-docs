@@ -164,8 +164,21 @@ from(bucket: "graphql-power")
 ```
 **NOTE**: If you ran new containers using docker compose, you may need to restart the sensor and formula for the data to be measured again correctly.
 
-# cAdvisor setup
+# cAdvisor + prometheus setup
 
 The docker compose file in the `cadvisor` folder contains everything needed to run cAdvisor on your machine in a docker container. cAdvisor monitors the whole machine (all running containers) so you can through the web UI easily select the container on `http://localhost:8080/docker` want to inspect in real-time.
 
 **NOTE**: cAdvisor's web ui is accessible on `http://localhost:8080/`
+**NOTE**: Prometheus's web ui is accessible on `http://localhost:9090/`
+
+Make sure that the cAdvisor service is visible in the target health and service descovery menus in Prometheus.
+You can test querying cAdvisor metrics:
+
+All cpu usage from the last 5 mins (all containers):
+`rate(container_cpu_usage_seconds_total[5m])`
+
+All cpu usage from the last 5 mins for a specific container:
+`rate(container_cpu_usage_seconds_total{container="my-container-name"}[1m])` (by container name)
+`rate(container_cpu_usage_seconds_total{id="123456789abc"}[1m])` (by container id)
+
+

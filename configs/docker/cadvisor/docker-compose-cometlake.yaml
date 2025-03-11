@@ -16,3 +16,22 @@ services:
       - "/dev/disk/:/dev/disk:ro"
     ports:
       - "8080:8080"
+    networks:
+      - monitoring
+
+  prometheus:
+    image: prom/prometheus
+    command:
+    - --config.file=/etc/prometheus/prometheus.yml
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - monitoring
+    depends_on:
+      - cadvisor
+
+networks:
+  monitoring:
+    driver: bridge
