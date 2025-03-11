@@ -163,3 +163,9 @@ from(bucket: "graphql-power")
   |> filter(fn: (r) => r["formula"] == "RAPL_ENERGY_PKG")
 ```
 **NOTE**: If you ran new containers using docker compose, you may need to restart the sensor and formula for the data to be measured again correctly.
+
+# cAdvisor setup
+
+The docker compose file in the `cadvisor` folder contains everything needed to run cAdvisor on your machine in a docker container. cAdvisor monitors the whole machine (all running containers) so you can through the web UI easily select the container on `http://localhost:8080/docker` want to inspect in real-time.
+
+**NOTE**: cAdvisor's web ui is accessible on `http://localhost:8080/`

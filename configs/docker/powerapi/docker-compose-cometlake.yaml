@@ -54,7 +54,7 @@ services:
       - /sys:/sys
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - /tmp/powerapi-sensor-reporting:/reporting
-      - ../hwpc/hwpc-config-cometlake.json:/config_file.json
+      - ../../hwpc/hwpc-config-cometlake.json:/config_file.json
       - ${PWD}:/srv
     command: --config-file /config_file.json
 
@@ -65,7 +65,7 @@ services:
     restart: always
     network_mode: "host"
     volumes:
-      - ../smartwatts/smartwatts-config-cometlake.json:/config_file.json
+      - ../../smartwatts/smartwatts-config-cometlake.json:/config_file.json
     command: --config-file /config_file.json
     depends_on:
       - influxdb
