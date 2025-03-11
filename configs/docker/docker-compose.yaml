@@ -1,9 +1,11 @@
 version: '3.8'
 
 services:
-  influxdb:
+
+  influxdb_source:
     image: influxdb:2.7
     restart: always
+    container_name: influxdb_source
     ports:
       - 8086:8086
     environment:
@@ -18,11 +20,11 @@ services:
     networks:
       - monitoring
 
-  grafana:
+  grafana_visualization:
     image: grafana/grafana
     restart: always
     depends_on:
-      - influxdb
+      - influxdb_source
     ports:
       - 3000:3000
     volumes:
@@ -30,10 +32,19 @@ services:
     networks:
       - monitoring
 
+  mongodb_destination:
+    image: mongo:latest
+    container_name: mongodb_destination
+    ports:
+      - "27017:27017" 
+    volumes:
+      - mongodb_data:/data/db
+
 volumes:
   influxdb-data: {}
   influxdb-config: {}
   grafana-data: {}
+  mongodb_data:
 
 networks:
   monitoring:
