@@ -13,7 +13,7 @@
     "output": {
         "pusher_power": {
             "type": "influxdb2",
-            "uri": "127.0.0.1",
+            "uri": "http://localhost",
             "port": 8086,
             "db": "graphql-power",
             "org": "graphql-experiment",

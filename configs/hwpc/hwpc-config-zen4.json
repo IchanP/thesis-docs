@@ -5,7 +5,7 @@
     "cgroup_basepath": "/sys/fs/cgroup/power.slice",
     "output": {
         "type": "mongodb",
-        "uri": "mongodb://127.0.0.1",
+        "uri": "mongodb://localhost",
         "database": "db_sensor",
         "collection": "report_0"
     },

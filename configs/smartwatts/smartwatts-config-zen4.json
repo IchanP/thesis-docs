@@ -5,7 +5,7 @@
         "puller": {
             "model": "HWPCReport",
             "type": "mongodb",
-            "uri": "mongodb://127.0.0.1",
+            "uri": "mongodb://localhost",
             "db": "db_sensor",
             "collection": "report_0"
         }
@@ -13,11 +13,11 @@
     "output": {
         "pusher_power": {
             "type": "influxdb2",
-            "uri": "127.0.0.1",
+            "uri": "http://localhost",
             "port": 8086,
             "db": "graphql-power",
             "org": "graphql-experiment",
-            "token": "vS_BAkOY4Fn60qbd7MRjtaPZAmVV1af5OBA5Vhw9tS6FW0TVuXGYLhNfVDCBIcZ-VWR4XjQEk3Z6zJnjnaxSYg=="
+            "token": "P0v6PP-efQhM-vylCG7gbBt5FR7S4YtwhV9kflNMJIEzLD3YAV8hE2ydo0PsMSLWL8hy6imKYcj55asBNphRLg=="
         }
     },
     "cpu-base-freq": 4200,

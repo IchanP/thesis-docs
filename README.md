@@ -2,6 +2,22 @@
 
 This is docs for helping to setup PowerAPI. It provides steps and links to follow for successful setup.
 
+There are several ways of getting everything up and running, either through the [run all script](./run-all.sh), starting [power-api](./configs/docker/powerapi/) through docker compose and then [cAdvisor](./configs/docker/cadvisor/) manually or simply starting all of the containers one by one.
+
+## Using the run-all.sh script with pre-configured values
+
+You can use the run-all.sh script to start all of the containers. The script starts the containers defined in [docker-compose.yaml](./configs//docker/docker-compose.yaml) file as well as [cAdvisor](./configs/docker/cadvisor/docker-compose-cometlake.yaml) and then starts the hwpc, smartwatts containers.
+
+To use the script you need to pass in a run flag like so:
+
+```sh
+./run-all.sh zen4
+```
+
+This tells the script to use the [start-sw-zen4.sh](./configs//smartwatts/start-sw-zen4.sh) and [start-hwpc-zen4.sh](./configs/hwpc/start-hwpc-zen4.sh) scripts. Passing cometlake results in the cometlake files being used.
+
+# Configuration and starting things manually
+
 ## Pulling Docker Images
 
 Start by pulling down Docker images
@@ -82,6 +98,8 @@ First we need to start MongoDB where all the data will be recorded:
 
 ## Starting MongoDB
 
+**NOTE MongoDB is included in the docker-compose files.**
+
 We need to setup a destination for the data to be recorded in. We use mongodb.
 
 ```sh
@@ -123,6 +141,7 @@ docker run -t \
 -v $(pwd)/<name of config file>.json:/config_file.json \
 powerapi/smartwatts-formula --config-file /config_file.json
 ```
+
 ## Docker network set up
 
 Before setting up Grafana, we need to establish a docker network so the containers can communicate with each other.
@@ -132,39 +151,41 @@ This will run a new InfluxDB container as well as a Grafana instance on the same
 
 ## Grafana setup
 
-After the launch, Grafana will be available at http://localhost:3000.
+After the launch, Grafana will be available at <http://localhost:3000>.
 Username and Password is `admin`
 
 ### Connect Grafana to InfluxDB
 
 Connections -> Data sources -> Add data source
-Select "InfluxDB". 
+Select "InfluxDB".
 
 Enter:
 
 - A data source Name, i.e `influxdb`,
 - A Query Language, select `FLUX`
-- An URL (http://influxdb:8086) **NOTE**: Grafana can now reach InfluxDB using the service name as the hostname within the docker network.
+- An URL (<http://influxdb:8086>) **NOTE**: Grafana can now reach InfluxDB using the service name as the hostname within the docker network.
 - Organization, `graphql-experiment`
 - Token, your influxDB token.
 - Default Bucket, `graphql-power`
 
 Then click on the "Save & test" button.
 
-### Visualize the data 
+### Visualize the data
 
 In Grafana:
 Dashboard -> Create dashboard -> Add visualisation -> your-influxDB-datasource
 
 Example: Query the power estimations from the last 10 minutes from the InfluxDB instance:
+
 ```sql
 from(bucket: "graphql-power")
   |> range(start: -10m) 
   |> filter(fn: (r) => r["formula"] == "RAPL_ENERGY_PKG")
 ```
+
 **NOTE**: If you ran new containers using docker compose, you may need to restart the sensor and formula for the data to be measured again correctly.
 
-# cAdvisor + prometheus setup
+# cAdvisor setup
 
 The docker compose file in the `cadvisor` folder contains everything needed to run cAdvisor on your machine in a docker container. cAdvisor monitors the whole machine (all running containers) so you can through the web UI easily select the container on `http://localhost:8080/docker` want to inspect in real-time.
 

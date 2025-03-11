@@ -1,4 +1,5 @@
-docker run --rm  \
+docker run -d \
+--rm  \
 --net=host \
 --privileged \
 --pid=host \
@@ -6,5 +7,5 @@ docker run --rm  \
 -v /var/lib/docker/containers:/var/lib/docker/containers:ro \
 -v /tmp/powerapi-sensor-reporting:/reporting \
 -v $(pwd):/srv \
--v $(pwd)/hwpc-config-zen4.json:/config_file.json \
+-v $(pwd)/configs/hwpc/hwpc-config-zen4.json:/config_file.json \
 powerapi/hwpc-sensor --config-file config_file.json
