@@ -7,13 +7,13 @@ fi
 RUN_FLAG=$1
 
 #!/bin/bash
-echo "STEP 1: Entering Docker config directory"
-cd ./configs/docker
+echo "STEP 1: Entering Docker powerapi directory"
+cd ./configs/docker/powerapi
 echo "STEP 2: Starting Docker containers"
-docker-compose up -d
+docker-compose -f docker-compose-$RUN_FLAG.yaml up -d
 
 # Get the list of service names from docker-compose.yml
-services=$(docker-compose config --services)
+services=$(docker-compose -f docker-compose-$RUN_FLAG.yaml config --services)
 
 # Function to check if all specified containers are running
 all_containers_running() {
@@ -36,13 +36,22 @@ while ! all_containers_running; do
   sleep 5
 done
 
-echo "STEP 3: Returning to original directory"
-cd ../../
+echo "STEP 3: Entering cAdvisor Directory"
+cd ../cadvisor
 
-echo "STEP 4: Starting HWPC script for $RUN_FLAG"
-source ./configs/hwpc/start-hwpc-$RUN_FLAG.sh
+echo "STEP 4: Starting cAdvisor"
+docker-compose up -d
 
-echo "STEP 5: Starting SmartWatts script for $RUN_FLAG"
-source ./configs/smartwatts/start-sw-$RUN_FLAG.sh
+# Get the list of service names from docker-compose.yml
+services=$(docker-compose config --services)
+
+# Wait until all specified containers are running
+while ! all_containers_running; do
+  echo "Waiting for containers to be ready..."
+  sleep 5
+done
+
+echo "STEP 5: Returning to original directory"
+cd ../../../
 
 echo "FINAL STEP: Script completed"
