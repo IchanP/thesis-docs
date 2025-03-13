@@ -202,4 +202,16 @@ All cpu usage from the last 5 mins for a specific container:
 `rate(container_cpu_usage_seconds_total{container="my-container-name"}[1m])` (by container name)
 `rate(container_cpu_usage_seconds_total{id="123456789abc"}[1m])` (by container id)
 
+Get the CPU usage as percentage over the last 10 minutes:
+`100 * rate(container_cpu_usage_seconds_total{container_label_com_docker_compose_service="smartwatts"}[10m])`
 
+# Update 2025-03-13 Daniel's config
+Start everything together
+`cd ~/src/thesis-docs/configs/docker/powerapi`
+`docker compose -f docker-compose-cometlake.yaml -d`
+
+Restart
+`docker compose -f docker-compose-cometlake.yaml restart`
+
+Have needed to to this multiple times for some reason
+`sudo mkdir -p /sys/fs/cgroup/power.slice`

@@ -20,6 +20,7 @@ services:
       - monitoring
 
   prometheus:
+    container_name: prometheus
     image: prom/prometheus
     command:
     - --config.file=/etc/prometheus/prometheus.yml
