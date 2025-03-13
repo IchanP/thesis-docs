@@ -21,8 +21,10 @@ services:
   grafana:
     image: grafana/grafana
     restart: always
+    container_name: grafana
     depends_on:
       - influxdb
+      - prometheus
     ports:
       - 3000:3000
     volumes:
@@ -69,6 +71,38 @@ services:
     command: --config-file /config_file.json
     depends_on:
       - influxdb
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.49.1
+    hostname: cadvisor
+    platform: linux/amd64
+    privileged: true
+    devices:
+      - "/dev/kmsg:/dev/kmsg"
+    volumes:
+      - "/:/rootfs:ro"
+      - "/var/run:/var/run:ro"
+      - "/sys:/sys:ro"
+      - "/var/lib/docker/:/var/lib/docker:ro"
+      - "/dev/disk/:/dev/disk:ro"
+    ports:
+      - "8080:8080"
+    networks:
+      - monitoring
+
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus
+    command:
+    - --config.file=/etc/prometheus/prometheus.yml
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - monitoring
+    depends_on:
+      - cadvisor
 
 volumes:
   influxdb-data: {}

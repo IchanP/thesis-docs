@@ -92,8 +92,6 @@ cat /sys/fs/cgroup/power.slice/docker-<the docker id>.scope/cgroup.procs
 echo $CONTAINER_ID
 ```
 
-### Run command for HWPC Sensor
-
 First we need to start MongoDB where all the data will be recorded:
 
 ## Starting MongoDB
@@ -106,7 +104,7 @@ We need to setup a destination for the data to be recorded in. We use mongodb.
 docker run -d --name mongo_destination -p 27017:27017 mongo
 ```
 
-Then we can start the sensor.
+## Starting the HWPC sensor
 
 Replace the `<config-file-path>` with the path to your config file.
 
@@ -185,7 +183,7 @@ from(bucket: "graphql-power")
 
 **NOTE**: If you ran new containers using docker compose, you may need to restart the sensor and formula for the data to be measured again correctly.
 
-# cAdvisor + prometheus setup
+## cAdvisor + prometheus setup
 
 The docker compose file in the `cadvisor` folder contains everything needed to run cAdvisor on your machine in a docker container. cAdvisor monitors the whole machine (all running containers) so you can through the web UI easily select the container on `http://localhost:8080/docker` want to inspect in real-time.
 
@@ -205,7 +203,8 @@ All cpu usage from the last 5 mins for a specific container:
 Get the CPU usage as percentage over the last 10 minutes:
 `100 * rate(container_cpu_usage_seconds_total{container_label_com_docker_compose_service="smartwatts"}[10m])`
 
-# Update 2025-03-13 Daniel's config
+## Update 2025-03-13 Daniel's config
+
 Start everything together
 `cd ~/src/thesis-docs/configs/docker/powerapi`
 `docker compose -f docker-compose-cometlake.yaml -d`
@@ -213,5 +212,5 @@ Start everything together
 Restart
 `docker compose -f docker-compose-cometlake.yaml restart`
 
-Have needed to to this multiple times for some reason
+Have needed to do this multiple times for some reason
 `sudo mkdir -p /sys/fs/cgroup/power.slice`
