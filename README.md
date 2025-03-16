@@ -68,31 +68,58 @@ There are two configurations available in the [./configs/hwpc](/configs/hwpc) fo
 
 ### Configuring the cgroup
 
-**NOTE** If your system uses systemd as the cgroup drive the .slice at the end is required.
+This section assumes you are using systemd as the cgroup driver.
 
-- Begin by finding the cgroup location on your linx installation. Normally it's in `/sys/fs/cgroup`.
-- Create a new directory in the cgroup location: `sudo mkdir power.slice`. When we start the container(s) later we will add `--group-parent=power.slice` as a run flag.
+To make the cgroup persistent between reboots we need to create a cgroup specification file.
 
-Example run command:
-
-```sh
-docker run --cgroup-parent=power.slice -d --name my_container your_image
-```
-
-To verify that the docker container was correctly added to the cgroup you can run the following commands:
+Begin by opening up a file under the system folder. The file name should match the name of the group-parent flag we will use when we create the container later: `--group-parent=power.slice`.
 
 ```sh
-# Grab the PID
-CONTAINER_PID=$(docker inspect -f '{{.State.Pid}}' my-container)
-# Find the cgroup path
-cat /proc/$CONTAINER_ID/cgroup
-# Cat the current processes in the path
-cat /sys/fs/cgroup/power.slice/docker-<the docker id>.scope/cgroup.procs
-# You can then compare the PID displayed with the container pid
-echo $CONTAINER_ID
+sudo nano /etc/systemd/system/power.slice
 ```
 
-First we need to start MongoDB where all the data will be recorded:
+The configuration file should look like this.
+
+```sh
+[Unit]
+Description=Power cgroup slice
+Documentation=man:systemd.special(7)
+DefaultDependencies=no
+Before=slices.target
+
+[Slice]
+CPUAccounting=true
+MemoryAccounting=true
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Restart the systemd configuration.
+
+```sh
+sudo systemctl daemon-reload
+```
+
+Enable the slice.
+
+```sh
+sudo systemctl enable power.slice
+```
+
+Start the slice.
+
+```sh
+sudo systemctl start power.slice
+```
+
+Verify that the slice is active.
+
+```sh
+sudo systemctl status power.slice
+```
+
+The cgroup should now persist between system reboots and we can use it to gather data.
 
 ## Starting MongoDB
 
