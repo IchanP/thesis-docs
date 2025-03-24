@@ -14,7 +14,7 @@ To use the script you need to pass in a run flag like so:
 ./run-all.sh zen4
 ```
 
-This tells the script to use the [start-sw-zen4.sh](./configs//smartwatts/start-sw-zen4.sh) and [start-hwpc-zen4.sh](./configs/hwpc/start-hwpc-zen4.sh) scripts. Passing cometlake results in the cometlake files being used.
+This tells the script to use the [start-sw-zen4.sh](./configs/smartwatts/start-sw-zen4.sh) and [start-hwpc-zen4.sh](./configs/hwpc/start-hwpc-zen4.sh) scripts. Passing cometlake results in the cometlake files being used.
 
 # Configuration and starting things manually
 
@@ -212,7 +212,7 @@ from(bucket: "graphql-power")
 
 ## cAdvisor + prometheus setup
 
-The docker compose file in the `cadvisor` folder contains everything needed to run cAdvisor on your machine in a docker container. cAdvisor monitors the whole machine (all running containers) so you can through the web UI easily select the container on `http://localhost:8080/docker` want to inspect in real-time.
+The docker compose file in the `cadvisor` folder contains everything needed to run cAdvisor on your machine in a docker container. cAdvisor monitors the whole machine (all running containers) so you can through the web UI easily select the container on `http://localhost:8080/docker` you want to inspect in real-time.
 
 **NOTE**: cAdvisor's web ui is accessible on `http://localhost:8080/`
 **NOTE**: Prometheus's web ui is accessible on `http://localhost:9090/`
