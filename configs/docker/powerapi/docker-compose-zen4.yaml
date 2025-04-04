@@ -19,8 +19,9 @@ services:
       - monitoring
 
   grafana:
-    image: grafana/grafana
+    image: grafana/grafana:latest
     restart: always
+    privileged: true
     container_name: grafana
     depends_on:
       - influxdb
@@ -28,7 +29,18 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - grafana-data:/var/lib/grafana
+      - ../grafana-db:/var/lib/grafana
+    networks:
+      - monitoring
+    environment:
+      GF_RENDERING_SERVER_URL: http://renderer:8081/render
+      GF_RENDERING_CALLBACK_URL: http://grafana:3000/
+      GF_LOG_FILTERS: rendering:debug
+
+  renderer:
+    image: grafana/grafana-image-renderer:latest
+    ports:
+    - 8081
     networks:
       - monitoring
 
